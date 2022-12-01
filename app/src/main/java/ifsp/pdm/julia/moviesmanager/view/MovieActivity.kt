@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import ifsp.pdm.julia.moviesmanager.databinding.ActivityContactBinding
-import ifsp.pdm.julia.moviesmanager.model.Constant.EXTRA_CONTACT
+import ifsp.pdm.julia.moviesmanager.model.Constant.EXTRA_MOVIE
 import ifsp.pdm.julia.moviesmanager.model.Constant.VIEW_CONTACT
-import ifsp.pdm.julia.moviesmanager.model.entity.Contact
+import ifsp.pdm.julia.moviesmanager.model.entity.Movie
 
-class ContactActivity : AppCompatActivity() {
+class MovieActivity : AppCompatActivity() {
     private val acb: ActivityContactBinding by lazy {
         ActivityContactBinding.inflate(layoutInflater)
     }
@@ -19,8 +18,8 @@ class ContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(acb.root)
 
-        val receivedContact = intent.getParcelableExtra<Contact>(EXTRA_CONTACT)
-        receivedContact?.let{ _receivedContact ->
+        val receivedMovie = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
+        receivedMovie?.let{ _receivedContact ->
             with(acb) {
                 with(_receivedContact) {
                     nameEt.setText(nomeFilme)
@@ -58,8 +57,8 @@ class ContactActivity : AppCompatActivity() {
         }
 
         acb.saveBt.setOnClickListener {
-            val contact = Contact(
-                id = receivedContact?.id,
+            val movie = Movie(
+                id = receivedMovie?.id,
                 nomeFilme = acb.nameEt.text.toString(),
                 anoLancamento = acb.anoLancamentoEt.text.toString(),
                 produtora = acb.produtoraEt.text.toString(),
@@ -69,7 +68,7 @@ class ContactActivity : AppCompatActivity() {
                 genero = acb.generoEt.selectedItemPosition.toString(),
             )
             val resultIntent = Intent()
-            resultIntent.putExtra(EXTRA_CONTACT, contact)
+            resultIntent.putExtra(EXTRA_MOVIE, movie)
             setResult(RESULT_OK, resultIntent)
             finish()
         }

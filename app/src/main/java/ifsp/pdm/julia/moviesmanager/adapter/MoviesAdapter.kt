@@ -8,16 +8,16 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import ifsp.pdm.julia.moviesmanager.R
-import ifsp.pdm.julia.moviesmanager.model.entity.Contact
+import ifsp.pdm.julia.moviesmanager.model.entity.Movie
 
-class ContactAdapter(
+class MoviesAdapter(
     context: Context,
-    private val contactList: MutableList<Contact>
-) : ArrayAdapter<Contact>(context, R.layout.tile_contact, contactList) {
+    private val movieList: MutableList<Movie>
+) : ArrayAdapter<Movie>(context, R.layout.tile_contact, movieList) {
     private data class TileContactHolder(val nameTv: TextView)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val contact = contactList[position]
+        val contact = movieList[position]
         var contactTileView = convertView
         if (contactTileView == null) {
             // Inflo uma nova célula

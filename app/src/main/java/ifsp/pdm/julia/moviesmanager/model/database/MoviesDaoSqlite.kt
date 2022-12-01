@@ -7,11 +7,11 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import ifsp.pdm.julia.moviesmanager.R
-import ifsp.pdm.julia.moviesmanager.model.dao.ContactDao
-import ifsp.pdm.julia.moviesmanager.model.entity.Contact
+import ifsp.pdm.julia.moviesmanager.model.dao.MoviesDao
+import ifsp.pdm.julia.moviesmanager.model.entity.Movie
 import java.sql.SQLException
 
-class ContactDaoSqlite(context: Context) : ContactDao {
+class MoviesDaoSqlite(context: Context) : MoviesDao {
     companion object Constant {
         private const val CONTACT_DATABASE_FILE = "contacts"
         private const val CONTACT_TABLE = "contact"
@@ -53,7 +53,7 @@ class ContactDaoSqlite(context: Context) : ContactDao {
         }
     }
 
-    private fun Contact.toContentValues() = with(ContentValues()) {
+    private fun Movie.toContentValues() = with(ContentValues()) {
         put(MOVIE_NAME_COLUMN, nomeFilme)
         put(RELEASE_YEAR_COLUMN, anoLancamento)
         put(PRODUCER_COLUMN, produtora)
@@ -64,18 +64,18 @@ class ContactDaoSqlite(context: Context) : ContactDao {
         this
     }
 
-    private fun contactToContentValues(contact: Contact) = with(ContentValues()) {
-        put(MOVIE_NAME_COLUMN, contact.nomeFilme)
-        put(RELEASE_YEAR_COLUMN, contact.anoLancamento)
-        put(PRODUCER_COLUMN, contact.produtora)
-        put(TIME_COLUMN, contact.duracao)
-        put(GRADE_COLUMN, contact.nota)
-        put(GENDER_COLUMN, contact.genero)
-        put(WATCHED_COLUMN, contact.assistido)
+    private fun contactToContentValues(movie: Movie) = with(ContentValues()) {
+        put(MOVIE_NAME_COLUMN, movie.nomeFilme)
+        put(RELEASE_YEAR_COLUMN, movie.anoLancamento)
+        put(PRODUCER_COLUMN, movie.produtora)
+        put(TIME_COLUMN, movie.duracao)
+        put(GRADE_COLUMN, movie.nota)
+        put(GENDER_COLUMN, movie.genero)
+        put(WATCHED_COLUMN, movie.assistido)
         this
     }
 
-    private fun Cursor.rowToContact() = Contact(
+    private fun Cursor.rowToMovie() = Movie(
         getInt(getColumnIndexOrThrow(ID_COLUMN)),
         getString(getColumnIndexOrThrow(MOVIE_NAME_COLUMN)),
         getString(getColumnIndexOrThrow(RELEASE_YEAR_COLUMN)),
@@ -86,45 +86,45 @@ class ContactDaoSqlite(context: Context) : ContactDao {
         getString(getColumnIndexOrThrow(WATCHED_COLUMN)).toBoolean(),
     )
 
-    override fun createContact(contact: Contact) = contactSqliteDatabase.insert(
+    override fun createMovie(movie: Movie) = contactSqliteDatabase.insert(
         CONTACT_TABLE,
         null,
-        contactToContentValues(contact)
+        contactToContentValues(movie)
     ).toInt()
 
 
-    override fun retrieveContact(id: Int): Contact? {
+    override fun retrieveMovie(id: Int): Movie? {
         val cursor = contactSqliteDatabase.rawQuery(
             "SELECT * FROM $CONTACT_TABLE WHERE $ID_COLUMN = ?",
             arrayOf(id.toString())
         )
-        val contact = if (cursor.moveToFirst()) cursor.rowToContact() else null
+        val contact = if (cursor.moveToFirst()) cursor.rowToMovie() else null
 
         cursor.close()
         return contact
     }
 
-    override fun retrieveContacts(): MutableList<Contact> {
-        val contactList = mutableListOf<Contact>()
+    override fun retrieveMovies(): MutableList<Movie> {
+        val movieList = mutableListOf<Movie>()
         val cursor = contactSqliteDatabase.rawQuery(
             "SELECT * FROM $CONTACT_TABLE ORDER BY $MOVIE_NAME_COLUMN",
             null
         )
         while (cursor.moveToNext()) {
-            contactList.add(cursor.rowToContact())
+            movieList.add(cursor.rowToMovie())
         }
         cursor.close()
-        return contactList
+        return movieList
     }
 
-    override fun updateContact(contact: Contact) = contactSqliteDatabase.update(
+    override fun updateMovie(movie: Movie) = contactSqliteDatabase.update(
         CONTACT_TABLE,
-        contact.toContentValues(),
+        movie.toContentValues(),
         "$ID_COLUMN = ?",
-        arrayOf(contact.id.toString())
+        arrayOf(movie.id.toString())
     )
 
-    override fun deleteContact(id: Int) =
+    override fun deleteMovie(id: Int) =
         contactSqliteDatabase.delete(
             CONTACT_TABLE,
             "$ID_COLUMN = ?",

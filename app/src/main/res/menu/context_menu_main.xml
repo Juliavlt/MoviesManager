@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/removeContactMi"
-        android:title="Remove contact" />
+        android:id="@+id/removeMovieMi"
+        android:title="Remove movie" />
     <item
-        android:id="@+id/editContactMi"
-        android:title="Edit contact" />
+        android:id="@+id/editMovieMi"
+        android:title="Edit movie" />
 </menu>

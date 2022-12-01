@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.ContactActivity"
+            android:name=".view.MovieActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

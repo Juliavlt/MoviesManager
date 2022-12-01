@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity
-data class Contact(
+data class Movie(
     @PrimaryKey(autoGenerate = true)
     var id: Int?,
     @NonNull

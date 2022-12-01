@@ -64,8 +64,10 @@ class MovieActivity : AppCompatActivity() {
                 produtora = acb.produtoraEt.text.toString(),
                 duracao = acb.duracaoEt.text.toString().toInt(),
                 assistido = (if (acb.assistidoEt.isChecked()) true else false),
-                nota = if (acb.notaEt.text.toString().toInt() > 10) 10 else acb.notaEt.text.toString().toInt(),
                 genero = acb.generoEt.selectedItemPosition.toString(),
+                nota = (if (!acb.notaEt.text.isEmpty()) {
+                    if (acb.notaEt.text.toString().toInt() > 10 ) 10 else acb.notaEt.text.toString().toInt()
+                } else 0) as Int
             )
             val resultIntent = Intent()
             resultIntent.putExtra(EXTRA_MOVIE, movie)
@@ -82,6 +84,8 @@ class MovieActivity : AppCompatActivity() {
                     }
                 }
             })
+
+
     }
 
 }

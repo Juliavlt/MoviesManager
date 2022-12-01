@@ -13,17 +13,16 @@ import ifsp.pdm.julia.moviesmanager.model.entity.Movie
 class MoviesAdapter(
     context: Context,
     private val movieList: MutableList<Movie>
-) : ArrayAdapter<Movie>(context, R.layout.tile_contact, movieList) {
+) : ArrayAdapter<Movie>(context, R.layout.tile_movie, movieList) {
     private data class TileContactHolder(val nameTv: TextView)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val contact = movieList[position]
         var contactTileView = convertView
         if (contactTileView == null) {
-            // Inflo uma nova célula
             contactTileView =
                 (context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
-                    R.layout.tile_contact,
+                    R.layout.tile_movie,
                     parent,
                     false
                 )

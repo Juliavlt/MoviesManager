@@ -5,24 +5,25 @@ import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
 import androidx.appcompat.app.AppCompatActivity
-import ifsp.pdm.julia.moviesmanager.databinding.ActivityContactBinding
+import ifsp.pdm.julia.moviesmanager.databinding.ActivityMovieBinding
 import ifsp.pdm.julia.moviesmanager.model.Constant.EXTRA_MOVIE
 import ifsp.pdm.julia.moviesmanager.model.Constant.VIEW_CONTACT
 import ifsp.pdm.julia.moviesmanager.model.entity.Movie
 
 class MovieActivity : AppCompatActivity() {
-    private val acb: ActivityContactBinding by lazy {
-        ActivityContactBinding.inflate(layoutInflater)
+    private val acb: ActivityMovieBinding by lazy {
+        ActivityMovieBinding.inflate(layoutInflater)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(acb.root)
 
         val receivedMovie = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
-        receivedMovie?.let{ _receivedContact ->
+        receivedMovie?.let{ _receivedMovie ->
             with(acb) {
-                with(_receivedContact) {
+                with(_receivedMovie) {
                     nameEt.setText(nomeFilme)
+                    acb.nameEt.isEnabled = false
                     anoLancamentoEt.setText(anoLancamento)
                     produtoraEt.setText(produtora)
                     duracaoEt.setText(duracao.toString())
@@ -38,8 +39,8 @@ class MovieActivity : AppCompatActivity() {
                 }
             }
         }
-        val viewContact = intent.getBooleanExtra(VIEW_CONTACT, false)
-        if (viewContact) {
+        val viewMovie = intent.getBooleanExtra(VIEW_CONTACT, false)
+        if (viewMovie) {
             acb.nameEt.isEnabled = false
             acb.anoLancamentoEt.isEnabled = false
             acb.produtoraEt.isEnabled = false

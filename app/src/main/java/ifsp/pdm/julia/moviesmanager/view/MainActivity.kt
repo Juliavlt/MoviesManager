@@ -1,6 +1,7 @@
 package ifsp.pdm.julia.moviesmanager.view
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.ContextMenu
 import android.view.Menu
@@ -24,16 +25,13 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // Data source
     private val movieList: MutableList<Movie> = mutableListOf()
 
-    // Adapter
-    private lateinit var contactAdapter: MoviesAdapter
+    private lateinit var movieAdapter: MoviesAdapter
 
     private lateinit var carl: ActivityResultLauncher<Intent>
 
-    // Controller
-    private val contactController: MoviesRoomController by lazy {
+    private val movieController: MoviesRoomController by lazy {
         MoviesRoomController(this)
     }
 
@@ -41,8 +39,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(amb.root)
 
-        contactAdapter = MoviesAdapter(this, movieList)
-        amb.contactsLv.adapter = contactAdapter
+        movieAdapter = MoviesAdapter(this, movieList)
+        amb.moviesLv.adapter = movieAdapter
 
         carl = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -50,34 +48,32 @@ class MainActivity : AppCompatActivity() {
             if (result.resultCode == RESULT_OK) {
                 val movie = result.data?.getParcelableExtra<Movie>(EXTRA_MOVIE)
 
-                movie?.let { _contact->
-                    if (_contact.id != null) {
-                        val position = movieList.indexOfFirst { it.id == _contact.id }
+                movie?.let { _movie->
+                    if (_movie.id != null) {
+                        val position = movieList.indexOfFirst { it.id == _movie.id }
                         if (position != -1) {
-                            // Alterar na posição
-                            contactController.editMovie(_contact)
+                            movieController.editMovie(_movie)
                         }
                     }
                     else {
-                        contactController.insertMovie(_contact)
+                        movieController.insertMovie(_movie)
                     }
                 }
             }
         }
 
-        registerForContextMenu(amb.contactsLv)
+        registerForContextMenu(amb.moviesLv)
 
-        amb.contactsLv.onItemClickListener =
+        amb.moviesLv.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
-                val contact = movieList[position]
-                val contactIntent = Intent(this@MainActivity, MovieActivity::class.java)
-                contactIntent.putExtra(EXTRA_MOVIE, contact)
-                contactIntent.putExtra(VIEW_CONTACT, true)
-                startActivity(contactIntent)
+                val movie = movieList[position]
+                val movieIntent = Intent(this@MainActivity, MovieActivity::class.java)
+                movieIntent.putExtra(EXTRA_MOVIE, movie)
+                movieIntent.putExtra(VIEW_CONTACT, true)
+                startActivity(movieIntent)
             }
 
-        // Buscando contatos no banco
-        contactController.getMovies()
+        movieController.getMovies()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -105,19 +101,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val position = (item.menuInfo as AdapterContextMenuInfo).position
-        val contact = movieList[position]
+        val movie = movieList[position]
         return when(item.itemId) {
             R.id.removeMovieMi -> {
                 // Remove o contato
-                contactController.removeMovie(contact)
+                movieController.removeMovie(movie)
                 true
             }
             R.id.editMovieMi -> {
                 // Chama a tela para editar o contato
-                val contactIntent = Intent(this, MovieActivity::class.java)
-                contactIntent.putExtra(EXTRA_MOVIE, contact)
-                contactIntent.putExtra(VIEW_CONTACT, false)
-                carl.launch(contactIntent)
+                val movieIntent = Intent(this, MovieActivity::class.java)
+                movieIntent.putExtra(EXTRA_MOVIE, movie)
+                movieIntent.putExtra(VIEW_CONTACT, false)
+                carl.launch(movieIntent)
                 true
             }
             else -> { false }
@@ -127,6 +123,6 @@ class MainActivity : AppCompatActivity() {
     fun updateMovieList(_movieList: MutableList<Movie>) {
         movieList.clear()
         movieList.addAll(_movieList)
-        contactAdapter.notifyDataSetChanged()
+        movieAdapter.notifyDataSetChanged()
     }
 }
